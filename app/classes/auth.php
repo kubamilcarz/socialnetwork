@@ -30,6 +30,13 @@ class Auth {
           return false;
      }
 
+     public function guard() {
+          if (!self::loggedin()) {
+               header("Location: index.php");
+               exit();
+          }
+     }
+
 }
 
 ?>
