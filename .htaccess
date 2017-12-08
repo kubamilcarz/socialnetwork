@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteRule ^profile/([0-9]+) profile.php?u=$1
+RewriteRule ^profile/friends/([0-9]+) friends.php?u=$1
+RewriteRule ^profile/albums/([0-9]+) albums.php?u=$1
