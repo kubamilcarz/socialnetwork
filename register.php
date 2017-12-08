@@ -17,17 +17,17 @@ if (isset($_POST['register'])) {
      <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-
+     <?php echo Auth::$error; ?>
      <form action="register.php" method="post">
           <div class="row">
-               <input type="text" name="fname" placeholder="First Name">
-               <input type="text" name="lname" placeholder="Last Name">
+               <input type="text" name="fname" placeholder="Imię">
+               <input type="text" name="lname" placeholder="Nazwisko">
           </div>
-          <input type="email" name="email" placeholder="E-mail Address">
+          <input type="email" name="email" placeholder="Adres email">
           <input type="text" name="uname" placeholder="Username">
           <div class="row">
-               <input type="password" name="pass" placeholder="Password">
-               <input type="password" name="rpass" placeholder="Repeat Password">
+               <input type="password" name="pass" placeholder="Hasło">
+               <input type="password" name="rpass" placeholder="Powtórz hasło">
           </div>
           <div class="row">
                <select name="birthD">
@@ -75,8 +75,9 @@ if (isset($_POST['register'])) {
                <option value="">sex</option>
                <option value="m">male</option>
                <option value="f">female</option>
+               <option value="o">inna</option>
           </select>
-          <input type="submit" name="register" value="register">
+          <input type="submit" name="register" value="zarejestruj się">
      </form>
 
      <script src="assets/js/juery.js"></script>
