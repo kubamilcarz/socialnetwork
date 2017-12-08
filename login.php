@@ -19,7 +19,7 @@ if (isset($_POST['login'])) {
      <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-
+     <?= Auth::$error; ?>
      <form action="login.php" method="post">
           <input type="text" name="user" placeholder="Username or E-mail Address">
           <input type="password" name="pass" placeholder="Password">

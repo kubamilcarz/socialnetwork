@@ -19,7 +19,7 @@ if (isset($_POST['register'])) {
      <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-     <?php echo Auth::$error; ?>
+     <?= Auth::$error; ?>
      <form action="register.php" method="post">
           <div class="row">
                <input type="text" name="fname" placeholder="Imię">

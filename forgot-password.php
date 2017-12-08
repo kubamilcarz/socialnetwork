@@ -1,4 +1,12 @@
-<?php require_once('./app/autoload.php'); if (Auth::loggedin()) {header("Location: index.php");exit();}?>
+<?php
+require_once('./app/autoload.php');
+if (Auth::loggedin()) {header("Location: index.php");exit();}
+
+if (isset($_POST['send'])) {
+     Auth::forgotPassword($email);
+}
+
+?>
 <!DOCTYPE html>
 <html lang="<?= init::$app_lang; ?>">
 <head>
@@ -10,7 +18,7 @@
      <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-
+     <?= Auth::$error; ?>
      <form action="forgot-password.php" method="post">
           <input type="email" name="email" placeholder="E-mail address">
           <input type="submit" name="send" value="send email">
