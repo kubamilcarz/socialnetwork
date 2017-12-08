@@ -1,6 +1,8 @@
 <?php
 require_once('./app/autoload.php');
 
+if (Auth::loggedin()) {header("Location: index.php");exit();}
+
 if (isset($_POST['login'])) {
      Auth::login($_POST['user'], $_POST['pass']);
 }

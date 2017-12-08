@@ -1,6 +1,8 @@
 <?php
 require_once('./app/autoload.php');
 
+if (Auth::loggedin()) {header("Location: index.php");exit();}
+
 if (isset($_POST['register'])) {
      Auth::register($_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['uname'], $_POST['pass'], $_POST['rpass'], $_POST['birthD'], $_POST['birthM'], $_POST['birthY'], $_POST['sex']);
 }

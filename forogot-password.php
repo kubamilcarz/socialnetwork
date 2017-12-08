@@ -1,4 +1,4 @@
-<?php require_once('./app/autoload.php'); ?>
+<?php require_once('./app/autoload.php'); if (Auth::loggedin()) {header("Location: index.php");exit();}?>
 <!DOCTYPE html>
 <html lang="<?= init::$app_lang; ?>">
 <head>

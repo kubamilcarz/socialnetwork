@@ -5,23 +5,24 @@ class Auth {
      public static $error = "";
 
      public function logout() {
-          DB::query('DELETE FROM login_tokens WHERE user_id=:userid', array(':userid'=>self::loggedin()));
+          DB::query('DELETE FROM login_tokens WHERE login_token_userid=:userid', array(':userid'=>self::loggedin()));
           setcookie("" . DB::$system_cookie_name . "", '1', time()-3600);
           setcookie("" . DB::$system_cookie_name . "_", '1', time()-3600);
-          header('Location: '.$_SERVER['PHP_SELF']);
+          header('Location: index.php');
+          exit();
      }
 
-     public function loggedin() {
+     public static function loggedin() {
           if (isset($_COOKIE['' . DB::$system_cookie_name . ''])) {
-               if (DB::query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE['' . DB::$system_cookie_name . ''])))) {
-                    $userid = DB::query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE['' . DB::$system_cookie_name . ''])))[0]['user_id'];
+               if (DB::query('SELECT login_token_userid FROM login_tokens WHERE login_token_token=:token', array(':token'=>sha1($_COOKIE['' . DB::$system_cookie_name . ''])))) {
+                    $userid = DB::query('SELECT login_token_userid FROM login_tokens WHERE login_token_token=:token', array(':token'=>sha1($_COOKIE['' . DB::$system_cookie_name . ''])))[0]['login_token_userid'];
                     if (isset($_COOKIE['' . DB::$system_cookie_name . '_'])) {
                          return $userid;
                     } else {
                          $cstrong = True;
                          $token = bin2hex(openssl_random_pseudo_bytes(64, $cstrong));
                          DB::query('INSERT INTO login_tokens VALUES (\'\', :token, :user_id)', array(':token'=>sha1($token), ':user_id'=>$userid));
-                         DB::query('DELETE FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE["" . DB::$system_cookie_name . ""])));
+                         DB::query('DELETE FROM login_tokens WHERE login_token_token=:token', array(':token'=>sha1($_COOKIE["" . DB::$system_cookie_name . ""])));
                          setcookie("" . DB::$system_cookie_name . "", $token, time() + 60 * 60 * 24 * 30, '/', NULL, NULL, TRUE);
                          setcookie("" . DB::$system_cookie_name . "_", '1', time() + 60 * 60 * 24 * 3, '/', NULL, NULL, TRUE);
                          return $userid;
@@ -37,6 +38,45 @@ class Auth {
                exit();
           }
      }
+
+     # login
+
+     public function login($login, $pass) {
+          if (strpos($login, '@') !== false) {
+               if (DB::query('SELECT user_email FROM users WHERE user_email=:email', array(':email'=>$login))) {
+                    if (password_verify($pass, DB::query('SELECT user_password FROM users WHERE user_email=:email', array(':email'=>$login))[0]['user_password'])) {
+
+                         $cstrong = True;
+                         $token = bin2hex(openssl_random_pseudo_bytes(64, $cstrong));
+                         $user_id = DB::query('SELECT user_user_id FROM users WHERE user_email=:email', array(':email'=>$login))[0]['user_user_id'];
+                         DB::query('INSERT INTO login_tokens VALUES (\'\', :token, :user_id)', array(':token'=>sha1($token), ':user_id'=>$user_id));
+
+                         setcookie("" . DB::$system_cookie_name . "", $token, time() + 60 * 60 * 24 * 30, '/', NULL, NULL, TRUE);
+                         setcookie("" . DB::$system_cookie_name . "_", '1', time() + 60 * 60 * 24 * 3, '/', NULL, NULL, TRUE);
+                         header("Location: index.php");
+                         exit();
+
+                    }else {self::$error = "Niepoprawne hasło!";}
+               }else {self::$error = "Użytkownik niezarejestrowany!";}
+          }else {
+               if (DB::query('SELECT user_username FROM users WHERE user_username=:username', array(':username'=>$login))) {
+                    if (password_verify($pass, DB::query('SELECT user_password FROM users WHERE user_username=:username', array(':username'=>$login))[0]['user_password'])) {
+
+                         $cstrong = True;
+                         $token = bin2hex(openssl_random_pseudo_bytes(64, $cstrong));
+                         $user_id = DB::query('SELECT user_user_id FROM users WHERE user_username=:username', array(':username'=>$login))[0]['user_user_id'];
+                         DB::query('INSERT INTO login_tokens VALUES (\'\', :token, :user_id)', array(':token'=>sha1($token), ':user_id'=>$user_id));
+
+                         setcookie("" . DB::$system_cookie_name . "", $token, time() + 60 * 60 * 24 * 30, '/', NULL, NULL, TRUE);
+                         setcookie("" . DB::$system_cookie_name . "_", '1', time() + 60 * 60 * 24 * 3, '/', NULL, NULL, TRUE);
+                         header("Location: index.php");
+                         exit();
+
+                    }else {self::$error = "Niepoprawne hasło!";}
+               }else {self::$error = "Użytkownik niezarejestrowany!";}
+          }
+     }
+
 
      # register
 
@@ -77,7 +117,7 @@ class Auth {
                                                             DB::query('INSERT INTO users VALUES (\'\', :fullname, :firstname, :lastname, :username, :email, :password, \'\', :gender, :dob, \'\', :profileimg, :backgroundimg, 0, 0, 0)',
                                                             [':fullname'=>$fullname, ':firstname'=>$fname, ':lastname'=>$lname, ':username'=>$uname, ':email'=>$email, ':password'=>$password, ':gender'=>$sex, ':dob'=>$dobirth, ':profileimg'=>$profileImg, ':backgroundimg'=>$backgroundImg]);
                                                             Mail::sendMail('Witaj w Social Network!', 'Twoje konto zostało pomyślnie utworzone!', $email);
-                                                            # self::login($email, $pass);
+                                                            self::login($email, $pass);
 
                                                        }else {self::$error = "Niepoprawna płeć!";}
 
