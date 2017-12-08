@@ -11,6 +11,13 @@
 </head>
 <body>
 
+     <form action="forgot-password.php" method="post">
+          <input type="password" name="opass" placeholder="Old Password">
+          <input type="password" name="npass" placeholder="Password">
+          <input type="password" name="rnpass" placeholder="Repeat Password">
+          <input type="submit" name="send" value="send email">
+     </form>
+
      <script src="assets/js/juery.js"></script>
      <script src="assets/js/functions.js"></script>
 </body>
