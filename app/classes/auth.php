@@ -149,7 +149,6 @@ class Auth {
      public function forgotPassword($email) {
           if (strpos($email, '@') !== false) {
           if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-          if (!DB::query('SELECT user_email FROM users WHERE user_email=:email', [':email'=>$email])) {
 
                $cstrong = True;
                $token = bin2hex(openssl_random_pseudo_bytes(64, $cstrong));
@@ -160,12 +159,11 @@ class Auth {
                self::$error = 'Sprawdź swoją pocztę.';
 
           }else {self::$error = "Adres jest niepoprawny!";}
-          }else {self::$error = "Podany adres email jest już zajęty!";}
-
           }else {self::$error = "Adres email musi zawierać znak @ (małpy)!";}
      }
 
      # change password
+
      public function changePassword($opass, $npass, $rnpass) {
           if (password_verify($opass, DB::query('SELECT user_password FROM users WHERE user_user_id=:userid', [':userid'=>self::loggedin()])[0]['user_password'])) {
                if ($npass == $rnpass) {
@@ -176,6 +174,18 @@ class Auth {
                     }
                }else {self::$error = "Podane hasła nie są identyczne!";}
           }else {self::$error = "Niepoprawne stare hasło!";}
+     }
+
+     # change password token
+
+     public function changePasswordToken($npass, $rnpass) {
+          if ($npass == $rnpass) {
+               if (strlen($npass) >= 6 && strlen($npass) <= 60) {
+                    DB::query('UPDATE users SET user_password=:newpassword WHERE user_user_id=:userid', array(':newpassword'=>password_hash($npass, PASSWORD_BCRYPT), ':userid'=>self::loggedin()));
+                    echo 'Password changed successfully!';
+                    DB::query('DELETE FROM password_tokens WHERE password_tokens_userid=:userid', array(':userid'=>self::loggedin()));
+               }
+          }else {self::$error = "Podane hasła nie są identyczne!";}
      }
 
 }

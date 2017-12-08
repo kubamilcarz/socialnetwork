@@ -9,8 +9,8 @@ if (Auth::loggedin()) {
 }else {
      if (isset($_GET['token'])) {
           $token = $_GET['token'];
-          if (DB::query('SELECT user_id FROM password_tokens WHERE token=:token', array(':token'=>sha1($token)))) {
-               $userid = DB::query('SELECT user_id FROM password_tokens WHERE token=:token', array(':token'=>sha1($token)))[0]['user_id'];
+          if (DB::query('SELECT password_tokens_userid FROM password_tokens WHERE password_tokens_token=:token', array(':token'=>sha1($token)))) {
+               $userid = DB::query('SELECT password_tokens_userid FROM password_tokens WHERE password_tokens_token=:token', array(':token'=>sha1($token)))[0]['password_tokens_userid'];
                $tokenIsValid = True;
                if (isset($_POST['send'])) {
                     Auth::changePasswordToken($_POST['npass'], $_POST['rnpass']);

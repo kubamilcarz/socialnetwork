@@ -3,7 +3,7 @@ require_once('./app/autoload.php');
 if (Auth::loggedin()) {header("Location: index.php");exit();}
 
 if (isset($_POST['send'])) {
-     Auth::forgotPassword($email);
+     Auth::forgotPassword($_POST['email']);
 }
 
 ?>
