@@ -59,6 +59,12 @@ if (isset($_POST['acceptFriendRequest'])) {
      Friend::acceptFriendRequest($userid, $friendid);
 }
 
+# posts
+
+if (isset($_POST['createPost'])) {
+     Post::createPost($_POST['body'], Auth::loggedin(), $_POST['privacy']);
+}
+
 if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':userid'=>$profileID])) {
      # user exist
      $profileUser = DB::query('SELECT * FROM users WHERE user_user_id=:userid', [':userid'=>$profileID])[0];
@@ -74,6 +80,7 @@ if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':us
           <title><?= $profileUser['user_full_name']; ?></title>
      </head>
      <body>
+          <?= Auth::$error . "<br>"; ?>
           <img src="<?= $profileUser['user_profile_picture']; ?>" height="205" width="205">
           <h1><?= $profileUser['user_full_name']; ?></h1>
           <hr>
@@ -149,8 +156,26 @@ if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':us
                <?php } ?>
 
           </ul>
-          <hr>
+          <?php if (Auth::loggedin()) {
+               if ($profileID == Auth::loggedin()) { ?>
+                    <hr>
+                    <div>
+                         <form action="" method="post">
+                              <textarea name="body" rows="8" cols="80"></textarea>
+                              <select name="privacy">
+                                   <option value="0">prywatność</option>
+                                   <option value="1">prywatny</option>
+                                   <option value="2">publiczny</option>
+                              </select>
+                              <input type="submit" value="zaakceptuj" name="createPost">
+                         </form>
+                    </div>
+          <?php } } ?>
 
+          <hr>
+          <div>
+               <?php Post::displayPostsOnProfile($profileID); ?>
+          </div>
      </body>
      </html>
 
