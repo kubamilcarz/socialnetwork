@@ -9,7 +9,11 @@ class Comment {
                     if (!DB::query('SELECT comments_id FROM comments WHERE comments_body=:body AND comments_date=:pdate AND comments_userid=:userid', [':body'=>$body, ':pdate'=>$date, ':userid'=>$creator])) {
 
                          DB::query('INSERT INTO comments VALUES (\'\', :body, NOW(), 0, 0, :userid, :postid)', [':body'=>$body, ':userid'=>$creator, ':postid'=>$postid]);
-                              Auth::$error = "Pomyślnie opublikowano komentarz!";
+
+                         $number_of_comments = DB::query('SELECT posts_comments FROM posts WHERE posts_id=:postid', [':postid'=>$postid])[0]['posts_comments'];
+                         $pcomments = $number_of_comments + 1;
+                         DB::query('UPDATE posts SET posts_comments=:pcomments WHERE posts_id=:postid', [':pcomments'=>$pcomments, ':postid'=>$postid]);
+                         Auth::$error = "Pomyślnie opublikowano komentarz!";
 
                     }else {Auth::$error = "Nie duplikuj komentarzy!";}
                }else {Auth::$error = "Komentarz może mieć (min: 5 znaków, a max: 256 znaków)!";}
@@ -17,7 +21,7 @@ class Comment {
      }
 
      public function displayComments($postid) {
-          $comments = DB::query('SELECT * FROM comments, users, posts WHERE comments_postid=:postsid AND comments_userid=user_user_id ORDER BY comments_id DESC', [':postsid'=>$postid]);
+          $comments = DB::query('SELECT * FROM comments, users, posts WHERE comments_postid=:postid AND comments_userid=user_user_id AND posts_id=comments_postid ORDER BY comments_id DESC', [':postid'=>$postid]);
 
           foreach ($comments as $comment) {
                echo '<div>
@@ -27,7 +31,6 @@ class Comment {
                     ' . $comment['comments_body'] . '
                     <hr>
                     <p>likes: <b>' . $comment['comments_likes'] . '</b></p>
-                    <p>comments: <b>' . $comment['comments_comments'] . '</b></p>
                     <hr>
                </div>';
           }

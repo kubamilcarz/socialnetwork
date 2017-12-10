@@ -1,26 +1,14 @@
 <?php
-require_once('./app/autoload.php');
 
-$postid = $_GET['p'];
-
-if (!DB::query('SELECT * FROM posts, users WHERE posts_id=:postid AND user_user_id=posts_userid AND posts_privacy=2', [':postid'=>$postid])){
-     require_once('app/modules/404.html');
-     exit();
+function __autoload($class_name) {
+     require_once('../classes/' . $class_name . '.php');
 }
 
-$post = DB::query('SELECT * FROM posts, users WHERE posts_id=:postid AND user_user_id=posts_userid AND posts_privacy=2', [':postid'=>$postid])[0];
-
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-     <script src="../assets/js/jquery.js"></script>
-     <title><?= substr($post['posts_body'], 0, 52) . "..."; ?></title>
-</head>
-<body id="single-post-container">
+if (isset($_POST['postid'])) {
+     Comment::createComment($_POST['commentBody'], Auth::loggedin(), $_POST['postid']);
+     $postid = $_POST['postid'];
+     $post = DB::query('SELECT * FROM posts, users WHERE posts_id=:postid AND user_user_id=posts_userid AND posts_privacy=2', [':postid'=>$postid])[0];
+     ?>
      <a href="<?= $_SERVER['HTTP_REFERER']; ?>"><– wróć</a>
      <div>
           <h2><?= $post['user_full_name']; ?></h2>
@@ -53,8 +41,6 @@ $post = DB::query('SELECT * FROM posts, users WHERE posts_id=:postid AND user_us
                     });
                });
                </script>
-     <?php }?>
-     <div id="comment-container"><?php Comment::displayComments($post['posts_id']); ?></div>
-
-</body>
-</html>
+     <?php }
+     Comment::displayComments($_POST['postid']);
+}
