@@ -160,6 +160,7 @@ if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':us
                if ($profileID == Auth::loggedin()) { ?>
                     <hr>
                     <div>
+
                          <form action="" method="post">
                               <textarea name="body" rows="8" cols="80"></textarea>
                               <select name="privacy">

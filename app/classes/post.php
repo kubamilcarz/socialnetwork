@@ -9,13 +9,18 @@ class Post {
           if ($creator == Auth::loggedin()) {
                if (strlen($body) >= 5 && strlen($body) <= 256) {
                     if ($privacy == "1" || $privacy == "2") {
-                         DB::query('INSERT INTO posts VALUES (\'\', :body, NOW(), :userid, :privacy, 0, 0)', [':body'=>$body, ':userid'=>$creator, ':privacy'=>$privacy]);
+                         $date = date('Y-m-d');
+                         if (!DB::query('SELECT posts_id FROM posts WHERE posts_body=:body AND posts_date=:pdate AND posts_userid=:userid AND posts_privacy=:privacy', [':body'=>$body, ':pdate'=>$date, ':userid'=>$creator, ':privacy'=>$privacy])) {
 
-                         if ($privacy == "1") {
-                              Auth::$error = "Pomyślnie opublikowano prywatny post!";
-                         }else if ($privacy == "2") {
-                              Auth::$error = "Pomyślnie opublikowano publiczny post!";
-                         }
+                              DB::query('INSERT INTO posts VALUES (\'\', :body, NOW(), :userid, :privacy, 0, 0)', [':body'=>$body, ':userid'=>$creator, ':privacy'=>$privacy]);
+                              if ($privacy == "1") {
+                                   Auth::$error = "Pomyślnie opublikowano prywatny post!";
+                              }else if ($privacy == "2") {
+                                   Auth::$error = "Pomyślnie opublikowano publiczny post!";
+                              }
+
+                         }else {Auth::$error = "Nie duplikuj postów!";}
+
 
                     }
                }else {Auth::$error = "Post może mieć (min: 5 znaków, a max: 256 znaków)!";}
