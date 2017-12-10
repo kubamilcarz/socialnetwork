@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <title>404 - page not found</title>
+     <style>
+          body {
+               background: #efefef;
+          }
+          .container {
+               height: 100vh;
+               width: 100vw;
+               display: flex;
+               justify-content: center;
+               align-items: center;
+          }
+
+          .flex-box .title {
+               margin: 0;
+               text-align: center;
+               font-size: 130px;
+               font-weight: 800;
+          }
+
+          .flex-box .error {
+               margin: 0;
+               color: #414141;
+               font-weight: 100;
+               padding: 15px 0;
+          }
+
+          input#search {
+               margin: 0;
+               box-sizing: border-box;
+               padding: 0 5px;
+               outline: none;
+               width: 100%;
+               height: 38px;
+               border-radius: 3px;
+               font-size: 15px;
+               border: 2.2px solid #414141;
+          }
+
+          .error404 {
+               color: #e23838;
+               margin: 0;
+               text-align: center;
+               padding: 15px 0;
+          }
+     </style>
+</head>
+<body>
+     <div class="container">
+          <div class="flex-box">
+               <h1 class="title">Oops!</h1>
+               <h2 class="error">Niestety nie znaleźliśmy szukanej strony :/</h2>
+               <form action="/social-network/search.php" method="get">
+                    <input type="search" name="q" placeholder="Spróbuj wyszukać czegoś innego..." id="search">
+               </form>
+               <h3 class="error404">Błąd 404</h3>
+          </div>
+     </div>
+</body>
+</html>

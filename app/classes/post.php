@@ -32,8 +32,12 @@ class Post {
                if ($userid == Auth::loggedin()) {
                     $posts = DB::query('SELECT * FROM posts, users WHERE posts_userid=:puserid AND user_user_id=:userid ORDER BY posts_id DESC', [':puserid'=>$userid, ':userid'=>$userid]);
                     foreach ($posts as $post) {
-                         echo $post['user_full_name'] . " ~ ";
-                         echo $post['posts_body'] . " (" . $post['posts_date'] . ") " . "<br><hr>";
+                         if ($post['posts_privacy'] == "2") {
+                              echo '<a href="../post/' . $post['posts_id'] .'">' . $post['user_full_name'] . " ~ " . $post['posts_body'] . " (" . $post['posts_date'] . ") " . "<br><hr>" . '</a>';
+                         }else {
+                              echo $post['user_full_name'] . " ~ " . $post['posts_body'] . " (" . $post['posts_date'] . ") " . "<br><hr>";
+                         }
+
                     }
                }else {
                     $posts = DB::query('SELECT * FROM posts, users WHERE posts_userid=:puserid AND user_user_id=:userid AND posts_privacy=2 ORDER BY posts_id DESC', [':puserid'=>$userid, ':userid'=>$userid]);
