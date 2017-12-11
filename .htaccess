@@ -1,5 +1,5 @@
 RewriteEngine On
-RewriteRule ^profile/([0-9]+) profile.php?u=$1
-RewriteRule ^profile/friends/([0-9]+) friends.php?u=$1
-RewriteRule ^profile/albums/([0-9]+) albums.php?u=$1
-RewriteRule ^post/([0-9]+) single-post.php?p=$1
+RewriteRule ^profile/([A-Za-z0-9-\s]+) profile.php?u=$1
+RewriteRule ^profile/friends/([A-Za-z0-9-\s]+) friends.php?u=$1
+RewriteRule ^profile/albums/([A-Za-z0-9-\s]+) albums.php?u=$1
+RewriteRule ^posts/([A-Za-z0-9-\s]+) single-post.php?p=$1

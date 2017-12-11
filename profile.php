@@ -183,7 +183,7 @@ if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':us
      <?php
 }else {
      # user doesn't exist
-     header("index.php");
+     require_once("app/modules/guard-error.html");
      exit();
 }
 

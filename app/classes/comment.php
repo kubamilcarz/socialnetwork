@@ -2,13 +2,13 @@
 
 class Comment {
 
-     public function createComment($body, $creator, $postid) {
-          if ($creator == Auth::loggedin()) {
+     public function createComment($body, $userid, $postid) {
+          if ($userid == Auth::loggedin()) {
                if (strlen($body) >= 5 && strlen($body) <= 256) {
                     $date = date('Y-m-d');
-                    if (!DB::query('SELECT comments_id FROM comments WHERE comments_body=:body AND comments_date=:pdate AND comments_userid=:userid', [':body'=>$body, ':pdate'=>$date, ':userid'=>$creator])) {
+                    if (!DB::query('SELECT comments_id FROM comments WHERE comments_body=:body AND comments_date=:pdate AND comments_userid=:userid AND comments_postid=:postid', [':body'=>$body, ':pdate'=>$date, ':userid'=>$userid, ':postid'=>$postid])) {
 
-                         DB::query('INSERT INTO comments VALUES (\'\', :body, NOW(), 0, 0, :userid, :postid)', [':body'=>$body, ':userid'=>$creator, ':postid'=>$postid]);
+                         DB::query('INSERT INTO comments VALUES (\'\', :body, NOW(), 0, 0, :userid, :postid)', [':body'=>$body, ':userid'=>$userid, ':postid'=>$postid]);
 
                          $number_of_comments = DB::query('SELECT posts_comments FROM posts WHERE posts_id=:postid', [':postid'=>$postid])[0]['posts_comments'];
                          $pcomments = $number_of_comments + 1;

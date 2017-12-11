@@ -34,7 +34,7 @@ class Auth {
 
      public function guard() {
           if (!self::loggedin()) {
-               header("Location: index.php");
+               require_once("../app/modules/guard-error.html");
                exit();
           }
      }
