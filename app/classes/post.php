@@ -71,7 +71,7 @@ class Post {
                Auth::$error = "Pomyślnie usunięto post!";
                header("Location: ../profile/" . $userid);
                exit();
-               
+
           }else {Auth::$error = "Żeby móc usuwać posty musisz być zalogowany!";}
      }
 
