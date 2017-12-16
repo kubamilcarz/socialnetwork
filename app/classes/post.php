@@ -193,12 +193,13 @@ class Post {
                                              <?php echo Comment::displayComments($post['posts_id']); ?>
                                         </div>
 
-                                        <form class="post_comments__form">
+                                        <div class="post_comments__form">
                                              <?php $loggedinUserImg = DB::query('SELECT user_profile_picture FROM users WHERE user_user_id=:userid', [':userid'=>Auth::loggedin()])[0]['user_profile_picture']; ?>
                                              <img src="<?= $loggedinUserImg; ?>"/>
-                                             <input type="text" name="commentbody" id="" placeholder="Napisz komentarz..."/>
-                                             <button type="submit" name="send" id=""><i class="fa fa-angle-right"></i></button>
-                                        </form>
+                                             <input type="hidden" name="commentpostid" id="commentpostid<?php echo $post['posts_id']; ?>" value="<?php echo $post['posts_id']; ?>">
+                                             <input type="text" name="commentbody" id="commentbody<?php echo $post['posts_id']; ?>" placeholder="Napisz komentarz..."/>
+                                             <button type="submit" name="send" id="commentPost<?php echo $post['posts_id']; ?>"><i class="fa fa-angle-right"></i></button>
+                                        </div>
                                    </div>
                               </div>
                               <script>
@@ -221,6 +222,21 @@ class Post {
                                         }, function(data, status) {
                                              $("#ajaxRefresh").html(data);
                                         });
+                                   });
+
+                                   $("#commentbody<?php echo $post['posts_id']; ?>").keypress(function(e) {
+                                        if(e.which == 13) {
+                                             var profileUserId = $(".profileUserId").val();
+                                             var commentBody = $("#commentbody<?php echo $post['posts_id']; ?>").val();
+                                             var commentpostid = $("#commentpostid<?php echo $post['posts_id']; ?>").val();
+                                             $.post("./../app/api/profile.php", {
+                                                  profileUserId: profileUserId,
+                                                  commentBody: commentBody,
+                                                  commentpostid: commentpostid
+                                             }, function(data, status) {
+                                                  $("#ajaxRefresh").html(data);
+                                             });
+                                        }
                                    });
                               </script>
                          <?php }else { ?>

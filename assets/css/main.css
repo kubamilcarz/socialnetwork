@@ -1322,7 +1322,7 @@ nav#sitenav-not {
                   .post.column .posts .post .post__comments .comments .comment .content .info .comment_btn span span {
                     margin-left: 4px;
                     color: #000; }
-        .post.column .posts .post .post__comments form.post_comments__form {
+        .post.column .posts .post .post__comments div.post_comments__form {
           padding-top: 12px;
           display: -webkit-box;
           display: -webkit-flex;
@@ -1334,12 +1334,12 @@ nav#sitenav-not {
           align-items: center;
           height: 35px;
           width: calc(100% - 15px); }
-          .post.column .posts .post .post__comments form.post_comments__form img {
+          .post.column .posts .post .post__comments div.post_comments__form img {
             height: 38px;
             border-radius: 50%;
             border: 1px solid #ecebec;
             margin-right: 10px; }
-          .post.column .posts .post .post__comments form.post_comments__form input {
+          .post.column .posts .post .post__comments div.post_comments__form input {
             outline: none;
             border-radius: 14.5px;
             width: calc(100% - 25px);
@@ -1350,9 +1350,9 @@ nav#sitenav-not {
             -webkit-transition: 70ms all ease-in-out;
             -o-transition: 70ms all ease-in-out;
             transition: 70ms all ease-in-out; }
-            .post.column .posts .post .post__comments form.post_comments__form input:focus {
+            .post.column .posts .post .post__comments div.post_comments__form input:focus {
               border-color: #007bb5; }
-          .post.column .posts .post .post__comments form.post_comments__form button {
+          .post.column .posts .post .post__comments div.post_comments__form button {
             width: 0px;
             position: relative;
             margin-left: -30px;

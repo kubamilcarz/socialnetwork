@@ -16,3 +16,10 @@ if (isset($_POST['unlikePostid'])) {
      $profileID = $_POST['profileUserId'];
      require_once("../modules/ajax/postsOnProfile.php");
 }
+
+if (isset($_POST['commentpostid'])) {
+     Comment::createComment($_POST['commentBody'], Auth::loggedin(), $_POST['commentpostid']);
+     // $postid = $_POST['unlikePostid'];
+     $profileID = $_POST['profileUserId'];
+     require_once("../modules/ajax/postsOnProfile.php");
+}
