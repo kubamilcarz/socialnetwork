@@ -5,20 +5,19 @@
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-     <title>start | <?= init::$app_name; ?></title>
-
-     <link rel="stylesheet" href="assets/css/main.css">
+     <title><?= init::$app_name; ?></title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+     <link rel="stylesheet" href="/social-network/assets/css/main.css">
 </head>
 <body>
      <?php if (Auth::loggedin()) {
           require_once("app/modules/nav.php");
      }else {
-          require_once("app/modules/nav-not-loggedin.php");
+          require_once("app/modules/nav-guest.php");
+          require_once("app/modules/auth/register.php");
      } ?>
-     <?php if (Auth::loggedin()) { ?>
-          <form action="" method="post"><input type="submit" name="logoutbtn" value="wyloguj się"></form>
-
-          <?php
+     <?php if (Auth::loggedin()) {
+          require_once("app/modules/posts/timeline.php");
                # timeline
                // $posts = DB::query('SELECT * FROM posts, users, friends WHERE user_user_id=posts_userid AND friends_status=4 AND posts_privacy=2 AND (friends_friendid=user_user_id OR friends_userid=user_user_id) ORDER BY posts_id DESC');
                // foreach ($posts as $post) {
@@ -28,7 +27,7 @@
           ?>
 
      <?php } ?>
-     <script src="assets/js/juery.js"></script>
-     <script src="assets/js/functions.js"></script>
+     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+     <script src="/social-network/assets/javascript/functions.js"></script>
 </body>
 </html>

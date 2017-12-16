@@ -1,28 +1,48 @@
-nav.site_nav
+nav.site_nav-not
      height: 85px
      background: $main
      box-shadow: 0px 4px 5px #e0e0e0
-     .site_nav__container
+     @media screen and (max-width: 370px)
+          height: 70px
+     .site_nav__container-not
           max-width: 980px
           margin: 0 auto
           height: 100%
           display: flex
           justify-content: space-between
           align-items: center
-          .site_nav__logo
+          @media screen and (max-width: 1000px)
+               padding: 0 20px
+               box-sizing: border-box
+          @media screen and (max-width: 690px)
+               justify-content: center
+          @media screen and (max-width: 400px)
+               padding: 0 15px
+
+
+          .site_nav__logo-not
                text-decoration: none
                color: #fff
-               font-size: 29px
+               font-size: 29.5px
                margin: 0
                padding: 0
                line-height: 85px
                font-family: 'Barlow Semi Condensed', 'Roboto', 'Open Sans', sans-serif
+               @media screen and (max-width: 500px)
+                    font-size: 26px
+               @media screen and (max-width: 370px)
+                    line-height: 70px
 
-          .site_nav__form
+          .site_nav__form-not
                height: 85px
                display: flex
                align-items: center
-               .site_nav_form__input
+               @media screen and (max-width: 690px)
+                    display: none
+               @media screen and (max-width: 370px)
+                    height: 70px
+
+               .site_nav_form__input-not
                     outline: none
                     box-sizing: border-box
                     padding: 0 5px
@@ -31,24 +51,127 @@ nav.site_nav
                     box-shadow: 0px 0px 5px darken($main, 13%)
                     height: 28px
                     width: 160px
+                    @media screen and (max-width: 1000px)
+                         width: 140px
+                         height: 24px
+
                     +tran
                     &:focus
                          border-color: darken($main, 25%)
                     &::placeholder
                          color: #4e4e4e
 
-               .site_nav_form__button
+               .site_nav_form__button-not
                     outline: none
                     box-sizing: border-box
                     padding: 0 5px
                     border-radius: 0px
+                    color: #efefef
+                    background: lighten($main, 3%)
                     border: 2px solid darken($main, 13%)
                     box-shadow: 0px 0px 5px darken($main, 13%)
                     height: 28px
                     width: 105px
                     text-align: center
+                    @media screen and (max-width: 1000px)
+                         width: 95px
+                         font-size: 11.5px
+                         height: 24px
+
                     +tran
                     &:hover
                          cursor: pointer
-                         border-color: darken($main, 25%)
-                         box-shadow: 0px 0px 10px darken($main, 13%)
+                         border-color: darken($main, 15%)
+                         box-shadow: 0px 0px 8px darken($main, 13%)
+
+nav.site_nav
+     height: 45px
+     background: $main
+     box-shadow: 0px 4px 5px #e0e0e0
+     position: fixed
+     top: 0
+     left: 0
+     width: 100%
+
+     .site_nav__container
+          max-width: 980px
+          margin: 0 auto
+          height: 100%
+          display: flex
+          justify-content: space-between
+          align-items: center
+          @media screen and (max-width: 1000px)
+               padding: 0 20px
+               box-sizing: border-box
+
+          .site_nav__left
+               display: flex
+               width: 100%
+               .site_nav__logo
+                    text-decoration: none
+                    color: #fff
+                    font-size: 25px
+                    margin: 0
+                    padding: 0
+                    font-family: 'Barlow Semi Condensed', 'Roboto', 'Open Sans', sans-serif
+                    margin-right: 35px
+               .site_nav__search_form
+                    display: flex
+                    flex-direction: column
+                    .site_nav_search_form__form
+                         display: flex
+                         width: 440px
+                         .site_nav_form__input, input
+                              width: 100%
+                              height: 28px
+                              outline: none
+                              border: 1px solid darken($main, 13%)
+                              box-shadow: 0px 0px 5px darken($main, 13%)
+                              box-sizing: border-box
+                              padding: 0 5px 0 24px
+                              margin: 0 0 0 -5px
+                              +tran
+                              &:focus
+                                   border-color: darken($main, 13%)
+                                   box-shadow: 0px 0px 8px darken($main, 20%)
+                                   &+.site_nav_form__btn
+                                        color: $main !important
+
+                         .site_nav_form__btn
+                              outline: none
+                              position: relative
+                              width: 0px
+                              padding: 0
+                              margin: 0
+                              border: 0px
+                              background: #fff
+                              color: #000
+                              font-size: 14px
+                              +tran
+                              &:hover
+
+                    .site_nav_search_form__results
+                         max-height: 220px
+                         height: 220px
+                         width: 437px
+                         position: absolute
+                         top: 43px
+                         background: #fff
+                         border: 2px solid $main
+                         margin-left: -5px
+
+          .site_nav__links
+               list-style-type: none
+               padding: 0
+               margin: 0
+               display: grid
+               grid-template-columns: repeat(4, 1fr)
+               grid-gap: 20px
+               li
+                    a
+                         text-decoration: none
+                         color: #fff
+                         cursor: pointer
+                         font-size: 17px
+                         &:hover
+                              color: darken(#fff, 8%)

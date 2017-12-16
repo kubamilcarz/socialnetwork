@@ -3,8 +3,8 @@ require_once('./app/autoload.php');
 
 if (Auth::loggedin()) {header("Location: index.php");exit();}
 
-if (isset($_POST['login'])) {
-     Auth::login($_POST['user'], $_POST['pass']);
+if (isset($_POST['loginbtn'])) {
+     Auth::login($_POST['user-input'], $_POST['password']);
 }
 
 ?>
@@ -14,18 +14,16 @@ if (isset($_POST['login'])) {
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-     <title>login | <?= init::$app_name; ?></title>
-
-     <link rel="stylesheet" href="assets/css/styles.css">
+     <title>logowanie - <?= init::$app_name; ?></title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+     <link rel="stylesheet" href="/social-network/assets/css/main.css">
 </head>
 <body>
-     <?= Auth::$error; ?>
-     <form action="login.php" method="post">
-          <input type="text" name="user" placeholder="Username or E-mail Address">
-          <input type="password" name="pass" placeholder="Password">
-          <input type="submit" name="login" value="login">
-     </form>
-
+     <?php
+     require_once("app/modules/nav-guest.php");
+     echo Auth::$error;
+     require_once("app/modules/auth/login.php");
+     ?>
      <script src="assets/js/juery.js"></script>
      <script src="assets/js/functions.js"></script>
 </body>
