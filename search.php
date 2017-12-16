@@ -14,9 +14,9 @@ if (isset($_GET['q'])) {
      foreach ($querye as $term) {
           $x++;
           if ($x == 1) {
-               $construct .= "user_full_name LIKE CONCAT('%',:search$x,'%') OR user_firstname LIKE CONCAT('%',:search$x,'%') OR user_lastname LIKE CONCAT('%',:search$x,'%') OR user_email LIKE CONCAT('%',:search$x,'%') OR user_phone LIKE CONCAT('%',:search$x,'%')";
+               $construct .= "user_full_name LIKE CONCAT('%',:search$x,'%') OR user_firstname LIKE CONCAT('%',:search$x,'%') OR user_lastname LIKE CONCAT('%',:search$x,'%') OR user_email LIKE CONCAT('%',:search$x,'%')";
           }else {
-               $construct .= " AND user_full_name LIKE CONCAT('%',:search$x,'%') OR user_firstname LIKE CONCAT('%',:search$x,'%') OR user_lastname LIKE CONCAT('%',:search$x,'%') OR user_email LIKE CONCAT('%',:search$x,'%') OR user_phone LIKE CONCAT('%',:search$x,'%')";
+               $construct .= " AND user_full_name LIKE CONCAT('%',:search$x,'%') OR user_firstname LIKE CONCAT('%',:search$x,'%') OR user_lastname LIKE CONCAT('%',:search$x,'%') OR user_email LIKE CONCAT('%',:search$x,'%')";
           }
           $params["search$x"] = $term;
      }
@@ -24,12 +24,15 @@ if (isset($_GET['q'])) {
      $results = $pdo->prepare("SELECT * FROM users WHERE $construct");
      $results->execute($params);
 
-     if ($results->rowCount() == 0) {
-          echo "0 results found <hr>";
-     }else {
-          echo $results->rowCount() . " results found <br>";
-     }
-     foreach ($results->fetchAll() as $result) {
-          echo "<a href='profile/" . $result['user_user_id'] . "'>" . $result['user_full_name'] . "</a><br>";
-     }
+     // if ($results->rowCount() == 0) {
+     //      echo "0 results found <hr>";
+     // }else {
+     //      echo $results->rowCount() . " results found <br>";
+     // }
+     // foreach ($results->fetchAll() as $result) {
+     //      echo "<a href='profile/" . $result['user_user_id'] . "'>" . $result['user_full_name'] . "</a><br>";
+     // }
+}else {
+     header("Location: index.php");
+     exit();
 }

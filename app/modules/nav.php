@@ -3,26 +3,25 @@
      <div id="searchbox">
           <div class="container">
                <div class="form">
-                    <input type="text" placeholder="Szukaj..." id="searchboxfield"/>
-                    <button type="submit" name="search" id="searchbtn"><i class="fa fa-search"></i></button>
+                    <input type="text" placeholder="Szukaj..." id="searchboxfieldD"/>
+                    <button type="submit" name="search" id="searchbtnD"><i class="fa fa-search"></i></button>
                </div>
+
                <button id="searchboxclose"><i class="fa fa-close"></i></button>
           </div>
           <div id="searchresults">
-               <a class="btn" href="">Pokaż wyniki na oddzielnej stronie</a>
-               <div class="grid">
-                    <div class="user">
-                         <img src="https://scontent-frx5-1.xx.fbcdn.net/v/t1.0-9/18274810_450468415293985_5791790352588547985_n.jpg?oh=5d0595f948104bbc5f8adcd2015ffcfb&amp;oe=5AA990E3"/>
-                         <div class="about">
-                              <h2 class="name">Jakub Milcarz</h2>
-                              <div class="info">
-                                   <a class="btn btn-follow" href="">Odwiedź profil</a>
-                                   <a class="btn btn-send-message" href=""><i class="fa fa-comment"></i>Wyślij wiadomość</a>
-                              </div>
-                         </div>
-                    </div>
-               </div>
+
           </div>
+          <script>
+               $("#searchboxfieldD").keypress(function(e) {
+                    var searchQuery = $("#searchboxfieldD").val();
+                    $.post("/social-network/app/api/search.php", {
+                         squery: searchQuery
+                    }, function(data, status) {
+                         $("#searchresults").html(data);
+                    });
+               });
+          </script>
      </div>
      <div class="container" id="undersearchbox">
           <ul class="links">
