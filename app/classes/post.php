@@ -190,7 +190,7 @@ class Post {
                                    </div>
                                    <div class="post__comments">
                                         <div class="comments">
-                                             <?php echo Comment::displayComments($post['posts_id']); ?>
+                                             <?php echo Comment::displayCommentsOnProfile($post['posts_id']); ?>
                                         </div>
 
                                         <div class="post_comments__form">
@@ -203,6 +203,7 @@ class Post {
                                    </div>
                               </div>
                               <script>
+
                                    $("#likePost<?php echo $post['posts_id'] ?>").click(function() {
                                         var profileUserId = $(".profileUserId").val();
                                         var LpostId = $("#Likepostid<?php echo $post['posts_id'] ?>").val();
@@ -238,6 +239,7 @@ class Post {
                                              });
                                         }
                                    });
+
                               </script>
                          <?php }else { ?>
                               <div class="post">

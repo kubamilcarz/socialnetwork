@@ -61,10 +61,6 @@ if (isset($_POST['acceptFriendRequest'])) {
 
 # posts
 
-if (isset($_POST['createPost'])) {
-     Post::createPost($_POST['body'], Auth::loggedin(), $_POST['privacy']);
-}
-
 if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':userid'=>$profileID])) {
      # user exist
      $profileUser = DB::query('SELECT * FROM users WHERE user_user_id=:userid', [':userid'=>$profileID])[0];
@@ -208,21 +204,36 @@ if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':us
                                         <button id="closeNewPostModalDesktop">anuluj<i class="fa fa-close"></i></button>
                                    </header>
                                    <div class="form">
-                                        <textarea id="newpostPostBody" name="postbody" placeholder="Napisz coś..."></textarea>
+                                        <input type="hidden" id="postprofileUserIdD" value="<?= $profileID; ?>">
+                                        <textarea id="newpostPostBodyD" name="postbody" placeholder="Napisz coś..."></textarea>
                                         <!-- <input id="newpostPostImg" type="file" name="postimg"/><img src="" id="newpostDesktopImg"/> -->
-                                        <select name="privacy">
+                                        <select name="privacy" id="newpostPrivacyD">
                                              <option value="0">prywatność</option>
                                              <option value="1">prywatny</option>
                                              <option value="2">publiczny</option>
                                         </select>
-                                        <button id="newpostPostSubmitBtn" type="submit" name="sendpost">napisz post</button>
+                                        <button id="newpostPostSubmitBtnD" type="submit" name="sendpost">napisz post</button>
                                    </div>
+                                   <script>
+                                        $("#newpostPostSubmitBtnD").click(function() {
+                                             var postuserid = $("#postprofileUserIdD").val();
+                                             var postbody = $("#newpostPostBodyD").val();
+                                             var postprivacy = $("#newpostPrivacyD").val();
+                                             $.post("./../app/api/profile.php", {
+                                                  postuserid: postuserid,
+                                                  postbody: postbody,
+                                                  postprivacy: postprivacy
+                                             }, function(data, status) {
+                                                  $("#ajaxRefresh").html(data);
+                                             });
+                                        });
+                                   </script>
                               </div>
                          </header>
                          <?php }} ?>
                          <div class="posts" id="ajaxRefresh">
                               <?php require_once("app/modules/ajax/postsOnProfile.php"); ?>
-                         </div>              
+                         </div>
                     </div>
      <script src="/social-network/assets/js/jquery.js"></script>
 
