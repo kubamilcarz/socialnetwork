@@ -9,7 +9,7 @@ class Comment {
                     if (!DB::query('SELECT comments_id FROM comments WHERE comments_body=:body AND comments_date=:pdate AND comments_userid=:userid AND comments_postid=:postid', [':body'=>$body, ':pdate'=>$date, ':userid'=>$userid, ':postid'=>$postid])) {
 
                          DB::query('INSERT INTO comments VALUES (\'\', :body, NOW(), 0, 0, :userid, :postid)', [':body'=>$body, ':userid'=>$userid, ':postid'=>$postid]);
-
+                         Activity::addPoints(2, 3, $userid);
                          $number_of_comments = DB::query('SELECT posts_comments FROM posts WHERE posts_id=:postid', [':postid'=>$postid])[0]['posts_comments'];
                          $pcomments = $number_of_comments + 1;
                          DB::query('UPDATE posts SET posts_comments=:pcomments WHERE posts_id=:postid', [':pcomments'=>$pcomments, ':postid'=>$postid]);
@@ -97,7 +97,7 @@ class Comment {
                $date = date('Y-m-d');
                if (!DB::query('SELECT comment_likes_commentid FROM comment_likes WHERE comment_likes_commentid=:commentid', [':commentid'=>$commentid])) {
                     DB::query('INSERT INTO comment_likes VALUES (\'\', 1, :userid, :commentid, :postid, :cldate)', [':userid'=>$userid, ':commentid'=>$commentid, ':postid'=>$postid, ':cldate'=>$date]);
-
+                    Activity::addPoints(1, 4, $userid);
                     $number_of_likes = DB::query('SELECT comments_likes FROM comments WHERE comments_id=:commentid', [':commentid'=>$commentid])[0]['comments_likes'];
                     $clikes = $number_of_likes + 1;
                     DB::query('UPDATE comments SET comments_likes=:clikes WHERE comments_id=:commentid', [':clikes'=>$clikes, ':commentid'=>$commentid]);
@@ -118,7 +118,7 @@ class Comment {
                if (DB::query('SELECT comment_likes_commentid FROM comment_likes WHERE comment_likes_commentid=:commentid', [':commentid'=>$commentid])) {
 
                     DB::query('DELETE FROM comment_likes WHERE comment_likes_userid=:userid AND comment_likes_commentid=:commentid', [':userid'=>$userid, ':commentid'=>$commentid]);
-
+                    Activity::removePoints(1, $userid);
                     $number_of_likes = DB::query('SELECT comments_likes FROM comments WHERE comments_id=:commentid', [':commentid'=>$commentid])[0]['comments_likes'];
                     $clikes = $number_of_likes - 1;
                     DB::query('UPDATE comments SET comments_likes=:clikes WHERE comments_id=:commentid', [':clikes'=>$clikes, ':commentid'=>$commentid]);

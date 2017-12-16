@@ -45,6 +45,7 @@ class Post {
                          if (!DB::query('SELECT posts_id FROM posts WHERE posts_body=:body AND posts_date=:pdate AND posts_userid=:userid AND posts_privacy=:privacy', [':body'=>$body, ':pdate'=>$date, ':userid'=>$userid, ':privacy'=>$privacy])) {
 
                               DB::query('INSERT INTO posts VALUES (\'\', :body, NOW(), :userid, :privacy, 0, 0)', [':body'=>$body, ':userid'=>$userid, ':privacy'=>$privacy]);
+                              Activity::addPoints(5, 1, $userid);
                               if ($privacy == "1") {
                                    Auth::$error = "Pomyślnie opublikowano prywatny post!";
                               }else if ($privacy == "2") {
@@ -112,6 +113,7 @@ class Post {
                $date = date('Y-m-d');
                if (!DB::query('SELECT post_likes_postid FROM post_likes WHERE post_likes_postid=:postid', [':postid'=>$postid])) {
                     DB::query('INSERT INTO post_likes VALUES (\'\', 1, :userid, :postid, :pldate)', [':userid'=>$userid, ':postid'=>$postid, ':pldate'=>$date]);
+                    Activity::addPoints(1, 2, $userid);
 
                     $number_of_likes = DB::query('SELECT posts_likes FROM posts WHERE posts_id=:postid', [':postid'=>$postid])[0]['posts_likes'];
                     $plikes = $number_of_likes + 1;
@@ -134,6 +136,7 @@ class Post {
                if (DB::query('SELECT post_likes_postid FROM post_likes WHERE post_likes_postid=:postid', [':postid'=>$postid])) {
 
                     DB::query('DELETE FROM post_likes WHERE post_likes_userid=:userid AND post_likes_postid=:postid', [':userid'=>$userid, ':postid'=>$postid]);
+                    Activity::removePoints(1, $userid);
 
                     $number_of_likes = DB::query('SELECT posts_likes FROM posts WHERE posts_id=:postid', [':postid'=>$postid])[0]['posts_likes'];
                     $plikes = $number_of_likes - 1;
