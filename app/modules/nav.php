@@ -1,3 +1,4 @@
+<link rel="shortcut icon" href="/social-network/assets/images/logo.png">
 <nav class="desktop top" id="sitenav">
      <div id="searchbox">
           <div class="container">

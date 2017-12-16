@@ -24,15 +24,34 @@ class Comment {
           $comments = DB::query('SELECT * FROM comments, users, posts WHERE comments_postid=:postid AND comments_userid=user_user_id AND posts_id=comments_postid ORDER BY comments_id DESC', [':postid'=>$postid]);
 
           foreach ($comments as $comment) {
-               echo '<div>
-                    <h3>' . $comment['user_full_name'] . '</h3>
-                    <p>' . $comment['comments_date'] . '</p>
-                    <hr>
-                    ' . $comment['comments_body'] . '
-                    <hr>
-                    <p>likes: <b>' . $comment['comments_likes'] . '</b></p>
-                    <hr>
-               </div>';
+               // echo '<div>
+               //      <h3>' . $comment['user_full_name'] . '</h3>
+               //      <p>' . $comment['comments_date'] . '</p>
+               //      <hr>
+               //      ' . $comment['comments_body'] . '
+               //      <hr>
+               //      <p>likes: <b>' . $comment['comments_likes'] . '</b></p>
+               //      <hr>
+               // </div>';
+               ?>
+               <div class="comment">
+                    <img src="<?= $comment['user_profile_picture']; ?>"/>
+                    <div class="content" style="width: auto;">
+                         <div class="body">
+                              <p><?= $comment['comments_body'] ?></p>
+                         </div>
+                         <div class="info">
+                              <button class="comment_btn">
+                                   <i class="fa fa-thumbs-up"></i>
+                                   <span>
+                                        Lubię to!<span>
+                                        <?php if ($comment['comments_likes'] != 0) {echo '(' . $comment['comments_likes'] . ')';} ?></span>
+                                   </span>
+                              </button>
+                         </div>
+                    </div>
+               </div>
+               <?php
           }
      }
 

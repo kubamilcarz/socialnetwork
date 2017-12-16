@@ -4,6 +4,38 @@ class Post {
 
      # privacy = 1 => private
      # privacy = 2 => public
+     public function getPostDate($dob) {
+          $exploded_dob = explode('-', $dob);
+          $day = $exploded_dob[2];
+          $month = $exploded_dob[1];
+          $year = $exploded_dob[0];
+
+          $d_0num = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"];
+          $d_num = ["1.", "2.", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"];
+          $pday = str_replace($d_0num, $d_num, $day);
+
+          $m_num = array("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
+          $m_pol = array("Stycznia", "Lutego", "Marca", "Kwietnia", "Maja", "Czerwca", "Lipca", "Sierpnia", "Września", "Października", "Listopada", "Grudnia");
+          $pmonth = str_replace($m_num, $m_pol, $month);
+
+          echo $pday . " ". $pmonth . " " . $year;
+     }
+
+     public function getPostDM($dob) {
+          $exploded_dob = explode('-', $dob);
+          $day = $exploded_dob[2];
+          $month = $exploded_dob[1];
+
+          $d_0num = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"];
+          $d_num = ["1.", "2.", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"];
+          $pday = str_replace($d_0num, $d_num, $day);
+
+          $m_num = array("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
+          $m_pol = array("Stycznia", "Lutego", "Marca", "Kwietnia", "Maja", "Czerwca", "Lipca", "Sierpnia", "Września", "Października", "Listopada", "Grudnia");
+          $pmonth = str_replace($m_num, $m_pol, $month);
+
+          echo $pday . " ". $pmonth;
+     }
 
      public function createPost($body, $userid, $privacy) {
           if ($userid == Auth::loggedin()) {
@@ -115,23 +147,83 @@ class Post {
 
      public function displayPostsOnProfile($userid) {
           if (Auth::loggedin()) {
-               if ($userid == Auth::loggedin()) {
+               // if ($userid == Auth::loggedin()) {
                     $posts = DB::query('SELECT * FROM posts, users WHERE posts_userid=:puserid AND user_user_id=:userid ORDER BY posts_id DESC', [':puserid'=>$userid, ':userid'=>$userid]);
                     foreach ($posts as $post) {
-                         if ($post['posts_privacy'] == "2") {
-                              echo '<a href="../posts/' . $post['posts_id'] .'">' . $post['user_full_name'] . " ~ " . $post['posts_body'] . " (" . $post['posts_date'] . ") " . "<br><hr>" . '</a>';
-                         }else {
-                              echo $post['user_full_name'] . " ~ " . $post['posts_body'] . " (" . $post['posts_date'] . ") " . "<br><hr>";
-                         }
+                         if ($post['posts_privacy'] == "2") { ?>
+                              <div class="post">
+                                   <header class="post__header">
+                                        <img class="post_header__img" src="<?= $post['user_profile_picture']; ?>"/>
+                                        <div class="post_header__user_info">
+                                             <h1 class="post_header__name"><?= $post['user_full_name']; ?><span class="username">@<?= $post['user_username']; ?></span></h1>
+                                             <?php if (substr($post['posts_date'], 0, 4) != date('Y')) { ?>
+                                                  <p class="post_header_date"><i class="fa fa-clock-o"></i><?= self::getPostDate($post['posts_date']); ?></p>
+                                             <?php }else { ?>
+                                                  <p class="post_header_date"><i class="fa fa-clock-o"></i><?= self::getPostDM($post['posts_date']); ?></p>
+                                             <?php } ?>
+                                        </div>
+                                   </header>
+                                   <div class="post__content">
+                                        <p><?= $post['posts_body']; ?></p>
+                                   </div>
+                                   <div class="post__integration">
+                                        <button class="post_btn">
+                                             <i class="fa fa-thumbs-up"></i>
+                                             <span>
+                                                  Lubię to!<span>
+                                                  <?php if ($post['posts_likes'] != 0) {echo '(' . $post['posts_likes'] . ')';} ?></span>
+                                             </span>
+                                        </button>
+                                   </div>
+                                   <div class="post__comments">
+                                        <div class="comments">
+                                             <?php echo Comment::displayComments($post['posts_id']); ?>
+                                        </div>
+
+                                        <form class="post_comments__form">
+                                             <?php $loggedinUserImg = DB::query('SELECT user_profile_picture FROM users WHERE user_user_id=:userid', [':userid'=>Auth::loggedin()])[0]['user_profile_picture']; ?>
+                                             <img src="<?= $loggedinUserImg; ?>"/>
+                                             <input type="text" name="commentbody" id="" placeholder="Napisz komentarz..."/>
+                                             <button type="submit" name="send" id=""><i class="fa fa-angle-right"></i></button>
+                                        </form>
+                                   </div>
+                              </div>
+                         <?php }else { ?>
+                              <div class="post">
+                                   <header class="post__header">
+                                        <img class="post_header__img" src="<?= $post['user_profile_picture']; ?>"/>
+                                        <div class="post_header__user_info">
+                                             <h1 class="post_header__name"><?= $post['user_full_name']; ?><span class="username">@<?= $post['user_username']; ?></span></h1>
+                                             <?php if (substr($post['posts_date'], 0, 4) != date('Y')) { ?>
+                                                  <p class="post_header_date"><i class="fa fa-clock-o"></i><?= self::getPostDate($post['posts_date']); ?></p>
+                                             <?php }else { ?>
+                                                  <p class="post_header_date"><i class="fa fa-clock-o"></i><?= self::getPostDM($post['posts_date']); ?></p>
+                                             <?php } ?>
+                                        </div>
+                                   </header>
+                                   <div class="post__content">
+                                        <p><?= $post['posts_body']; ?></p>
+                                   </div>
+                                   <div class="post__integration">
+                                        <button class="post_btn">
+                                             <i class="fa fa-thumbs-up"></i>
+                                             <span>
+                                                  Lubię to!<span>
+                                                  <?php if ($post['posts_likes'] != 0) {echo '(' . $post['posts_likes'] . ')';} ?></span>
+                                             </span>
+                                        </button>
+                                   </div>
+                              </div>
+                         <?php }
 
                     }
-               }else {
-                    $posts = DB::query('SELECT * FROM posts, users WHERE posts_userid=:puserid AND user_user_id=:userid AND posts_privacy=2 ORDER BY posts_id DESC', [':puserid'=>$userid, ':userid'=>$userid]);
-                    foreach ($posts as $post) {
-                         echo $post['user_full_name'] . " ~ ";
-                         echo $post['posts_body'] . "<br><hr>";
-                    }
-               }
+               // }else {
+               //      $posts = DB::query('SELECT * FROM posts, users WHERE posts_userid=:puserid AND user_user_id=:userid AND posts_privacy=2 ORDER BY posts_id DESC', [':puserid'=>$userid, ':userid'=>$userid]);
+               //      foreach ($posts as $post) {
+               //           echo $post['user_full_name'] . " ~ ";
+               //           echo $post['posts_body'] . "<br><hr>";
+               //      }
+               // }
           }
 
      }

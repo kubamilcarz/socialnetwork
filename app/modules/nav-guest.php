@@ -1,3 +1,4 @@
+<link rel="shortcut icon" href="/social-network/assets/images/logo.png">
 <nav id="sitenav-not">
   <div class="container"><a href="/">Primus Connection</a>
    <form action="login.php" method="post">

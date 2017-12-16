@@ -111,105 +111,121 @@ if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':us
                                         <li><i class="fa fa-genderless"></i>kobieta</li>
                                    <?php } ?>
                                    <li><i class="fa fa-birthday-cake"></i><?= User::getDob($profileUser['user_dob']); ?></li>
-                                   <li><i class="fa fa-pencil"></i>posty: <b></b>1435</li>
                                    <li><i class="fa fa-globe"></i>punkty: <b><?= $profileUser['user_points']; ?></b></li>
+                                   <li class="scroller">
+                                        <a href="./friends/<?= $profileUser['user_user_id']; ?>">znajomi</a> <a href="./albums/<?= $profileUser['user_user_id']; ?>">zdjęcia</a>
+                                   </li>
+                                   <?php if (Auth::loggedin()) {
+                                        if ($profileID != Auth::loggedin()) {
+                                             if (DB::query('SELECT friends_status FROM friends WHERE friends_friendid=:friendid AND friends_userid=:userid', [':friendid'=>Auth::loggedin(), ':userid'=>$profileID])) {
+                                                  $statusY = DB::query('SELECT friends_status FROM friends WHERE friends_friendid=:friendid AND friends_userid=:userid', [':friendid'=>Auth::loggedin(), ':userid'=>$profileID])[0]['friends_status'];
+                                                  if ($statusY == "1") {
+                                                       echo '<form action="" method="post">
+                                                            <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
+                                                            <input type="submit" name="acceptFriendRequest" value="zaakceptuj zaproszenie" class="btn" style="display: block; margin: 10px auto 0 auto;">
+                                                       </form>';
+                                                       exit();
+                                                  }else if ($statusY == "3") {
+                                                       echo '<form action="" method="post">
+                                                            <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
+                                                            <input type="submit" name="addToFriendsAgainAnother" value="dodaj do znajomych" class="btn" style="display: block; margin: 10px auto 0 auto;">
+                                                       </form>';
+                                                       exit();
+                                                  }else if ($statusY == "4") {
+                                                       echo '<form action="" method="post">
+                                                            <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
+                                                            <input type="submit" name="deleteFromFriendsAnother" value="usuń ze znajomych" class="btn" style="display: block; margin: 10px auto 0 auto;">
+                                                       </form>';
+                                                       exit();
+                                                  }
+                                             }
+
+                                             if (DB::query('SELECT friends_status FROM friends WHERE friends_friendid=:friendid AND friends_userid=:userid', [':friendid'=>$profileID, ':userid'=>Auth::loggedin()])) {
+
+                                                  $friendStatus = DB::query('SELECT friends_status FROM friends WHERE friends_friendid=:friendid AND friends_userid=:userid', [':friendid'=>$profileID, ':userid'=>Auth::loggedin()])[0]['friends_status'];
+                                                  if ($friendStatus == "1") {
+                                                       echo '<form action="" method="post">
+                                                            <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
+                                                            <input type="submit" name="cancelSendedFriendRequest" value="anuluj zaproszenie" class="btn btn-stop-follow" style="display: block; margin: 10px auto 0 auto;">
+                                                       </form>';
+                                                  }else if ($friendStatus == "2") {
+                                                       echo '<form action="" method="post">
+                                                            <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
+                                                            <input type="submit" name="cancelAcceptedFriendsRequest" value="usuń ze znajomych" class="btn" style="display: block; margin: 10px auto 0 auto;">
+                                                       </form>';
+                                                  }else if ($friendStatus == "3") {
+                                                       echo '<form action="" method="post">
+                                                            <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
+                                                            <input type="submit" name="addToFriendsAgain" value="wyślij jeszcz raz" class="btn" style="display: block; margin: 10px auto 0 auto;">
+                                                       </form>';
+                                                  }else if ($friendStatus == "4") {
+                                                       echo '<form action="" method="post">
+                                                            <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
+                                                            <input type="submit" name="deleteFromFriends" value="usuń ze znajomych" class="btn" style="display: block; margin: 10px auto 0 auto;">
+                                                       </form>';
+                                                  }
+                                             }else {
+                                                  echo '<form action="" method="post">
+                                                       <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
+                                                       <input type="submit" name="addToFriends" value="dodaj do znajomych" class="btn btn-follow" style="display: block; margin: 10px auto 0 auto;">
+                                                  </form>';
+                                             }
+                                        }
+                                   } ?>
                               </ul>
                          </div>
-                         <div class="stuff-mobile-modal" id="mobileProfileInfoModal">
+                         <!-- <div class="stuff-mobile-modal" id="mobileProfileInfoModal">
                               <header>
                                    <h1>Informacje</h1>
                                    <button id="closeMobileProfileInfoMobile">zamknij<i class="fa fa-close"></i></button>
                               </header>
                               <ul class="content">
-                                   <li><i class="fa fa-envelope-o"></i>j.milcarz@yahoo.com</li>
-                                   <li><i class="fa fa-phone-square"></i>+48 509 512 090</li>
-                                   <li><i class="fa fa-male"></i>mężczyzna</li>
-                                   <li><i class="fa fa-birthday-cake"></i>17.06.2002</li>
-                                   <li><i class="fa fa-connectdevelop"></i>1435</li>
+                                   <li><i class="fa fa-envelope-o"></i><?= $profileUser['user_email']; ?></li>
+                                   <?php if ($profileUser['user_phone'] != 0) { ?>
+                                        <li><i class="fa fa-phone-square"></i><?= $profileUser['user_phone']; ?></li>
+                                   <?php } ?>
+                                   <?php if ($profileUser['user_gender'] == "m") { ?>
+                                        <li><i class="fa fa-mars"></i>mężczyzna</li>
+                                   <?php }elseif ($profileUser['user_gender'] == "f") { ?>
+                                        <li><i class="fa fa-venus"></i>kobieta</li>
+                                   <?php }elseif ($profileUser['user_gender'] == "o") { ?>
+                                        <li><i class="fa fa-genderless"></i>kobieta</li>
+                                   <?php } ?>
+                                   <li><i class="fa fa-birthday-cake"></i><?= User::getDob($profileUser['user_dob']); ?></li>
+                                   <li><i class="fa fa-globe"></i>punkty: <b><?= $profileUser['user_points']; ?></b></li>
                               </ul>
+                         </div> -->
+                    </div>
+                    <div class="post column">
+                         <?php if (Auth::loggedin()) {
+                              if ($profileID == Auth::loggedin()) { ?>
+                         <header>
+                              <button id="newPostModalDesktop">Napisz coś ciekawego...</button>
+                              <div class="modal new-post" id="newpostmodalddesktop">
+                                   <header>
+                                        <h1>Nowy Post</h1>
+                                        <button id="closeNewPostModalDesktop">anuluj<i class="fa fa-close"></i></button>
+                                   </header>
+                                   <div class="form">
+                                        <textarea id="newpostPostBody" name="postbody" placeholder="Napisz coś..."></textarea>
+                                        <!-- <input id="newpostPostImg" type="file" name="postimg"/><img src="" id="newpostDesktopImg"/> -->
+                                        <select name="privacy">
+                                             <option value="0">prywatność</option>
+                                             <option value="1">prywatny</option>
+                                             <option value="2">publiczny</option>
+                                        </select>
+                                        <button id="newpostPostSubmitBtn" type="submit" name="sendpost">napisz post</button>
+                                   </div>
+                              </div>
+                         </header>
+                         <?php }} ?>
+                         <div class="posts">
+                              <?php Post::displayPostsOnProfile($profileID); ?>
                          </div>
                     </div>
-
-     <img src="<?= $profileUser['user_profile_picture']; ?>" height="205" width="205">
-     <h1><?= $profileUser['user_full_name']; ?></h1>
-     <hr>
-     <ul>
-          <li><a href="./friends/<?= $profileUser['user_user_id']; ?>">znajomi</a></li>
-          <li><a href="">informacje</a></li>
-          <li><a href="./albums/<?= $profileUser['user_user_id']; ?>">zdjęcia</a></li>
-          <li></li>
-          <?php if (Auth::loggedin()) { ?>
-               <li>
-                    <?php
-                    if ($profileID != Auth::loggedin()) {
-                         if (DB::query('SELECT friends_status FROM friends WHERE friends_friendid=:friendid AND friends_userid=:userid', [':friendid'=>Auth::loggedin(), ':userid'=>$profileID])) {
-                              $statusY = DB::query('SELECT friends_status FROM friends WHERE friends_friendid=:friendid AND friends_userid=:userid', [':friendid'=>Auth::loggedin(), ':userid'=>$profileID])[0]['friends_status'];
-                              if ($statusY == "1") {
-                                   echo '<form action="" method="post">
-                                        <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
-                                        <input type="submit" name="acceptFriendRequest" value="zaakceptuj zaproszenie">
-                                   </form>';
-                                   exit();
-                              }else if ($statusY == "3") {
-                                   echo '<form action="" method="post">
-                                        <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
-                                        <input type="submit" name="addToFriendsAgainAnother" value="dodaj do znajomych">
-                                   </form>';
-                                   exit();
-                              }else if ($statusY == "4") {
-                                   echo '<form action="" method="post">
-                                        <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
-                                        <input type="submit" name="deleteFromFriendsAnother" value="usuń ze znajomych">
-                                   </form>';
-                                   exit();
-                              }
-                         }
-
-                         if (DB::query('SELECT friends_status FROM friends WHERE friends_friendid=:friendid AND friends_userid=:userid', [':friendid'=>$profileID, ':userid'=>Auth::loggedin()])) {
-
-                              $friendStatus = DB::query('SELECT friends_status FROM friends WHERE friends_friendid=:friendid AND friends_userid=:userid', [':friendid'=>$profileID, ':userid'=>Auth::loggedin()])[0]['friends_status'];
-                              if ($friendStatus == "1") {
-                                   echo "pending";
-                                   echo '<form action="" method="post">
-                                        <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
-                                        <input type="submit" name="cancelSendedFriendRequest" value="anuluj">
-                                   </form>';
-                              }else if ($friendStatus == "2") {
-                                   echo "accepted";
-                                   echo '<form action="" method="post">
-                                        <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
-                                        <input type="submit" name="cancelAcceptedFriendsRequest" value="anuluj">
-                                   </form>';
-                              }else if ($friendStatus == "3") {
-                                   echo "canceled";
-                                   echo '<form action="" method="post">
-                                        <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
-                                        <input type="submit" name="addToFriendsAgain" value="wyślij jeszcz raz">
-                                   </form>';
-                              }else if ($friendStatus == "4") {
-                                   echo "friends";
-                                   echo '<form action="" method="post">
-                                        <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
-                                        <input type="submit" name="deleteFromFriends" value="usuń ze znajomych">
-                                   </form>';
-                              }
-                         }else {
-                              echo '<form action="" method="post">
-                                   <input type="hidden" name="userid" value="' . $profileUser['user_user_id'] . '">
-                                   <input type="submit" name="addToFriends" value="dodaj do znajomych">
-                              </form>';
-                         }
-                    }
-                    ?>
-               </li>
-          <?php } ?>
-
-     </ul>
-     <?php if (Auth::loggedin()) {
+     <!-- <?php if (Auth::loggedin()) {
           if ($profileID == Auth::loggedin()) { ?>
-               <hr>
                <div>
-
                     <form action="" method="post">
                          <textarea name="body" rows="8" cols="80"></textarea>
                          <select name="privacy">
@@ -220,12 +236,9 @@ if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':us
                          <input type="submit" value="zaakceptuj" name="createPost">
                     </form>
                </div>
-     <?php } } ?>
-
-     <hr>
-     <div>
-          <?php Post::displayPostsOnProfile($profileID); ?>
-     </div>
+     <?php } } ?> -->
+     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+     <script src="/social-network/assets/javascript/functions.js"></script>
 </body>
 </html>
 
