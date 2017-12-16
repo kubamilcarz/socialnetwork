@@ -78,6 +78,7 @@ if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':us
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <meta http-equiv="X-UA-Compatible" content="ie=edge">
      <title><?= $profileUser['user_full_name']; ?></title>
+     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
      <link rel="stylesheet" href="/social-network/assets/css/main.css">
 </head>
@@ -219,25 +220,12 @@ if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':us
                               </div>
                          </header>
                          <?php }} ?>
-                         <div class="posts">
-                              <?php Post::displayPostsOnProfile($profileID); ?>
-                         </div>
+                         <div class="posts" id="ajaxRefresh">
+                              <?php require_once("app/modules/ajax/postsOnProfile.php"); ?>
+                         </div>              
                     </div>
-     <!-- <?php if (Auth::loggedin()) {
-          if ($profileID == Auth::loggedin()) { ?>
-               <div>
-                    <form action="" method="post">
-                         <textarea name="body" rows="8" cols="80"></textarea>
-                         <select name="privacy">
-                              <option value="0">prywatność</option>
-                              <option value="1">prywatny</option>
-                              <option value="2">publiczny</option>
-                         </select>
-                         <input type="submit" value="zaakceptuj" name="createPost">
-                    </form>
-               </div>
-     <?php } } ?> -->
-     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+     <script src="/social-network/assets/js/jquery.js"></script>
+
      <script src="/social-network/assets/javascript/functions.js"></script>
 </body>
 </html>

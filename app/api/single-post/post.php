@@ -28,5 +28,4 @@ if (isset($_POST['unlikePostid'])) {
      $post = DB::query('SELECT * FROM posts, users WHERE posts_id=:postid AND user_user_id=posts_userid AND posts_privacy=2', [':postid'=>$postid])[0];
 
      require_once("../modules/ajax/single-post.php");
-
 }

@@ -35,7 +35,7 @@ class Comment {
                // </div>';
                ?>
                <div class="comment">
-                    <img src="<?= $comment['user_profile_picture']; ?>"/>
+                    <a href=""><img class="post_header__img" src="<?= $comment['user_profile_picture']; ?>"/></a>
                     <div class="content" style="width: auto;">
                          <div class="body">
                               <p><?= $comment['comments_body'] ?></p>
