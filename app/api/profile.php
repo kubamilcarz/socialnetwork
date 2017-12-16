@@ -9,3 +9,10 @@ if (isset($_POST['likePostid'])) {
      $profileID = $_POST['profileUserId'];
      require_once("../modules/ajax/postsOnProfile.php");
 }
+
+if (isset($_POST['unlikePostid'])) {
+     Post::unlikePost(Auth::loggedin(), $_POST['unlikePostid']);
+     $postid = $_POST['unlikePostid'];
+     $profileID = $_POST['profileUserId'];
+     require_once("../modules/ajax/postsOnProfile.php");
+}

@@ -167,13 +167,24 @@ class Post {
                                         <p><?= $post['posts_body']; ?></p>
                                    </div>
                                    <div class="post__integration">
-                                        <button class="post_btn" id="likePost<?php echo $post['posts_id'] ?>">
-                                             <i class="fa fa-thumbs-up"></i>
-                                             <span>
-                                                  Lubię to!<span>
-                                                  <?php if ($post['posts_likes'] != 0) {echo '(' . $post['posts_likes'] . ')';} ?></span>
-                                             </span>
-                                        </button>
+                                        <?php if (!DB::query('SELECT post_likes_postid FROM post_likes WHERE post_likes_postid=:postid', [':postid'=>$post['posts_id']])) { ?>
+                                             <button class="post_btn" id="likePost<?php echo $post['posts_id'] ?>">
+                                                  <i class="fa fa-thumbs-up"></i>
+                                                  <span>
+                                                       Lubię to!<span>
+                                                       <?php if ($post['posts_likes'] != 0) {echo '(' . $post['posts_likes'] . ')';} ?></span>
+                                                  </span>
+                                             </button>
+                                        <?php }else { ?>
+                                             <button class="post_btn active" id="unlikePost<?php echo $post['posts_id']; ?>">
+                                                  <i class="fa fa-thumbs-up"></i>
+                                                  <span>
+                                                       Lubię to!<span>
+                                                       <?php if ($post['posts_likes'] != 0) {echo '(' . $post['posts_likes'] . ')';} ?></span>
+                                                  </span>
+                                             </button>
+                                        <?php } ?>
+
                                         <input type="hidden" class="profileUserId" value="<?php echo $post['posts_userid']; ?>">
                                         <input type="hidden" id="Likepostid<?php echo $post['posts_id']; ?>" value="<?php echo $post['posts_id']; ?>">
                                    </div>
@@ -197,6 +208,16 @@ class Post {
                                         $.post("./../app/api/profile.php", {
                                              profileUserId: profileUserId,
                                              likePostid: LpostId
+                                        }, function(data, status) {
+                                             $("#ajaxRefresh").html(data);
+                                        });
+                                   });
+                                   $("#unlikePost<?php echo $post['posts_id'] ?>").click(function() {
+                                        var profileUserId = $(".profileUserId").val();
+                                        var LpostId = $("#Likepostid<?php echo $post['posts_id'] ?>").val();
+                                        $.post("./../app/api/profile.php", {
+                                             profileUserId: profileUserId,
+                                             unlikePostid: LpostId
                                         }, function(data, status) {
                                              $("#ajaxRefresh").html(data);
                                         });
