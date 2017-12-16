@@ -110,7 +110,7 @@ if (DB::query('SELECT user_user_id FROM users WHERE user_user_id=:userid', [':us
                                    <?php }elseif ($profileUser['user_gender'] == "o") { ?>
                                         <li><i class="fa fa-genderless"></i>kobieta</li>
                                    <?php } ?>
-                                   <li><i class="fa fa-birthday-cake"></i></li>
+                                   <li><i class="fa fa-birthday-cake"></i><?= User::getDob($profileUser['user_dob']); ?></li>
                                    <li><i class="fa fa-pencil"></i>posty: <b></b>1435</li>
                                    <li><i class="fa fa-globe"></i>punkty: <b><?= $profileUser['user_points']; ?></b></li>
                               </ul>
